@@ -1,14 +1,20 @@
 from bs4 import BeautifulSoup
 import requests
 import os
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
 header = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36" ,
     'referer':'https://www.google.com/'
 }
 
-req = requests.get("https://www.cardratings.com/credit-card-list.html", headers=header)
-soup = BeautifulSoup(req.text, "html.parser")
+driver = webdriver.Chrome(ChromeDriverManager().install())
+url = 'https://www.cardratings.com/credit-card-list.html'
+driver.get(url)
+
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
 soup_A = soup.find(id = 'div_A')
 
 #file_path = 'C:\Users\ackim\Desktop\output.html'
