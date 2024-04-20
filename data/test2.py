@@ -1,17 +1,19 @@
-from bs4 import BeautifulSoup
-import requests
-import os
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
 
-header = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36" ,
-    'referer':'https://www.google.com/'
-}
+options = Options()
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
+options.add_argument('referer=https://www.google.com/')
+options.add_argument('--headless')
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 url = 'https://www.cardratings.com/credit-card-list.html'
 driver.get(url)
+driver.implicitly_wait(10) 
 
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
@@ -24,15 +26,6 @@ cards_links = soup_A.find_all("span", {"class": "sh-active-client sh-quidget-ren
                              #attrs={"data-rate-name": True, "data-content": True,}
 )
 
-#with open(file_path, 'w', encoding='utf-8') as file:
- #   file.write(str(cards_links))
-
-#print(cards_links)
-
-print(req.status_code)
-#for i in range(25):
- #   letter = chr(ord('a')+i)
-  #  s
 
 unique_card = []
 
@@ -43,9 +36,10 @@ for cardlink in cards_links:
     ul = cardlink.find("ul")
     #print(cardlink)
     if ul:
-        li = ul.find_all('li')
-        for lis in li:
-            print(li.text)
+        print(ul)
+        # li = ul.find_all('li')
+        # for lis in li:
+        #     print(li.text)
         #bullet_points = [li.text.strip() for li in ul.find_all('li')]
         #description = '\n'.join(bullet_points)  # Combines all bullet points into a single string
     else:
