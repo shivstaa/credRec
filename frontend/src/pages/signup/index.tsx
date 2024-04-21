@@ -64,17 +64,19 @@ interface FirebaseError {
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSignup} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
               <TextField
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      margin='normal'
+                      margin='none'
                       fullWidth
                       name="email"
                       required
                       placeholder='email'
                     />
-            <Grid container spacing={2}>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   type="password"
@@ -85,6 +87,18 @@ interface FirebaseError {
                   required
                   margin='none'
                   placeholder='password'
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  fullWidth
+                  name="email"
+                  required
+                  margin='none'
+                  placeholder='Confirm Password'
                 />
               </Grid>
               <Grid item xs={12}>
