@@ -74,8 +74,8 @@ interface FirebaseError {
                       fullWidth
                       name="email"
                       required
-                      placeholder='email'
-                    />
+                      placeholder='john@gmail.com'
+                      />
               </Grid>
               <Grid item xs={12}>
                 <TextField

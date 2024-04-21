@@ -13,7 +13,7 @@ export function generateTransactions(): Transaction[] {
   const startDate = new Date();
   startDate.setFullYear(startDate.getFullYear() - 1); // Set start date to one year ago
 
-  for (let i = 0; i < 365; i++) {
+  for (let i = 0; i < 31; i++) {
     // Generate data for each day of the year
     const transactionCount = faker.datatype.number({ min: 1, max: 10 }); // Random number of transactions per day
     for (let j = 0; j < transactionCount; j++) {

@@ -1,47 +1,46 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
+import { generateTransactions } from '../../fakedata';
 
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-  const [useFinancialData, setUseFinancialData] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
 
   const handleToggle = async () => {
-    setUseFinancialData(!useFinancialData); // Toggle the state
-    const response = await fetch('/api/toggle-financial-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ enabled: !useFinancialData }),
-    });
-
-    const data = await response.json();
-    console.log(data); // Log the response from the server
+    setIsEnabled(current => !current);
+    if (!isEnabled) {
+      const transactions = generateTransactions();
+      try {
+        const response = await fetch('http://localhost:5000/api/receive-transactions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(transactions),
+        });
+        const data = await response.json();
+        setResponseMessage(data.message); // Set the response message from the backend
+      } catch (error) {
+        console.error('Error sending data:', error);
+        setResponseMessage('Failed to process transactions.');
+      }
+    } else {
+      setResponseMessage(''); // Clear message when toggled off
+    }
   };
 
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <label htmlFor="toggleFinancialData" className="flex items-center cursor-pointer">
-        <div className="relative">
-          <input
-            id="toggleFinancialData"
-            type="checkbox"
-            className="sr-only"
-            checked={useFinancialData}
-            onChange={handleToggle}
-          />
-          <div className="block bg-gray-600 w-14 h-8 rounded-full"></div>
-          <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${useFinancialData ? 'translate-x-full' : ''}`}></div>
-        </div>
-        <div className="ml-3 text-gray-700 font-medium">
-          Use Financial Data
-        </div>
+    <main>
+      <h1>Enable Transaction Data</h1>
+      <label>
+        Toggle Financial Data:
+        <input type="checkbox" checked={isEnabled} onChange={handleToggle} />
       </label>
+      {responseMessage && <div><p>Response:</p><p>{responseMessage}</p></div>} {/* Display the response message */}
     </main>
   );
 }

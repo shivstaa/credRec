@@ -19,7 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       setTimeout(() => {
         console.log("Redirecting to login");
         router.push('/login');
-      }, 2000);  // Wait for 3 seconds before actually redirecting
+      }, 3000);  // Wait for 3 seconds before actually redirecting
     }
   }, [authContext, router]);
 

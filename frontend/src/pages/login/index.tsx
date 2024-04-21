@@ -87,6 +87,7 @@ const LoginPage: React.FC = () => {
               fullWidth
               name="email"
               autoComplete="email"
+              placeholder='john@gmail.com'
               autoFocus
             />
             <TextField
@@ -98,6 +99,7 @@ const LoginPage: React.FC = () => {
               fullWidth
               name="password"
               id="password"
+              placeholder='password'
               autoComplete="current-password"
             />
             <FormControlLabel

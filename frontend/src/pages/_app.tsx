@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from 'next/router';
 import { AuthProvider } from "../components/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Navbar from '@/components/Navbar';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -13,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
+      <Navbar/>
       {isProtectedRoute ? (
         <ProtectedRoute>
           <Component {...pageProps} />
