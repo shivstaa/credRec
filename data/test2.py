@@ -29,12 +29,16 @@ html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 soup_A = soup.find(id='div_A')
 
-cards_links = soup_A.find_all("span", {"class": "sh-active-client sh-quidget-rendered"})
+cards_links = soup_A.find_all("div", {"class": True, "id": True})
 
 unique_card = []
 
 for cardlink in cards_links:
-    name = cardlink.get('data-rate-name', 'No Name Available')  # More robust way to handle missing attributes
+    print(cardlink)
+    span = cardlink.find_all("span", {"class": "sh-active-client sh-quidget-rendered"})
+    print("FUCKING LOOK RIGHT HEREEEEEEEEEEEE")
+    print (span)
+    name = span.get('data-rate-name', 'No Name Available')
 
     # description = "No description available"  # Default description
     ul = cardlink.find("ul")
@@ -45,7 +49,6 @@ for cardlink in cards_links:
     if ul:
         description = ul.text.strip()  # Extract text and strip any excess whitespace
     
-
     if name not in unique_card:  # Prevent duplicate card names
         unique_card.append((name, description))  # Store as a tuple for better structure
 
