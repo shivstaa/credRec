@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-          <nav className="bg-purple-800 shadow-lg">
+          <nav className="bg-purple-800 shadow-lg text-white	">
       <div className="w-full px-4">
         <div className="flex justify-between">
           <Box className="flex items-center">
@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
         <Box display="flex" justifyContent="flex-end">
           {authenticated ? (
             <div className="relative">
-              <button onClick={toggleDropdown} className="py-5 px-3 text-white hover:text-gray-900">
+              <button onClick={toggleDropdown} className="py-5 px-3 text-white hover:text-900">
                 {user?.email}
               </button>
               {dropdownOpen && (
