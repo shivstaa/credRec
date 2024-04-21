@@ -52,7 +52,9 @@ unique_card = []
 for cardlink in cards_links:
     element = cardlink.find("a", class_="sh-active-client sh-quidget-rendered")
     if element:
-        name = element.get(0, 'data-rate-name')
+        name = element.get("title")
+        if name:
+            name = name.replace("Apply Now for ", "")
         link = element["href"]
         creditNeededSpan = cardlink.find("span", class_="credit_needed font-weight-semibold")
         creditNeeded = creditNeededSpan.text
@@ -69,7 +71,7 @@ for cardlink in cards_links:
     if ul:
         description = ul.text.strip()  # Extract text and strip any excess whitespace
     
-    if name not in unique_card and description not in unique_card:  # Prevent duplicate card names
+    if name not in unique_card and name is not None:  # Prevent duplicate card names
         unique_card.append((name, link, description, creditNeeded, imagesource))  # Store as a tuple for better structure
         #print(type(image_data))
 # Output the results
