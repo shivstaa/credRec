@@ -71,13 +71,13 @@ rag_chain = (
 )
 
 # Test response
-resp = rag_chain.invoke("What is the 5/24 rule?")
+# resp = rag_chain.invoke("What is the 5/24 rule?")
 
 
 # Routes
 @app.route("/")
 def hello_world():
-    return f"<p>{resp}</p><p>Text length is: {len(texts)}</p>"
+    return f"<p>Text length is: {len(texts)}</p>"
 
 
 @app.route('/api/receive-transactions', methods=['POST'])
@@ -104,7 +104,6 @@ def receive_transactions():
     pages = loader.load_and_split()
     combined_pages = " ".join(page.page_content for page in pages)
 
-
     llm_prompt_template = """
     The following question contains transaction data contains fields (Date, Amount, Description) and the 'Context Data' contains credit cards with fields (credit card name, description, rating, link). Based on the user's question, utilize these pieces of data to recommend credit cards from the 'Context Data'. 
 
@@ -125,6 +124,31 @@ def receive_transactions():
 
     return jsonify({'valid': True, 'response': resp})
 
+
+@app.route('/api/send-message', methods=['POST'])
+def send_message():
+    user_message = request.json['message']
+    try:
+        llm_prompt_template = """
+        You are a highly capable assistant designed to provide credit card recommendations based on specific user inquiries, using a pre-defined list of credit cards from the context. Each card has unique benefits and URLs provided. Match these cards to the user's needs based on their question, emphasizing how each recommended card suits these needs.
+
+        Question: {question}
+        Context Data: {context}
+
+        Analyze the details in the 'Context Data' and select up to 10 credit cards from the context data that best answer the user's question. Provide a brief description and URL for each card, clearly explaining why each card is suited for the user's requirements. List your recommendations below:
+        Answer:
+        """
+
+        llm_prompt = PromptTemplate.from_template(llm_prompt_template)
+
+        rag_chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | llm_prompt | llm | StrOutputParser()
+)
+        response = rag_chain.invoke(user_message)
+        return jsonify({'response': response, 'status': 'success'})
+    except Exception as e:
+        return jsonify({'response': str(e), 'status': 'error'})
 
 if __name__ == "__main__":
     app.run(debug=True)
