@@ -12,66 +12,50 @@ import requests
 options = Options()
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
 options.add_argument('referer=https://www.google.com/')
-options.add_argument('--headless')
 options.add_argument('--enable-third-party-cookies')  # Attempt to allow third-party cookies
 options.add_argument("--log-level=3")
+options.add_argument("--headless")
 
 # Initialize WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-url = 'https://www.cardratings.com/credit-card-list.html#div_D'
-driver.get(url)
-link_element = driver.find_element(By.CLASS_NAME, "div_D")
-link_element.click()
+unique_card = set()
+for char in range(ord('D'), ord('Z')+1):
+    result = ("div_" + chr(char))
+    url=('https://www.cardratings.com/credit-card-list.html#' +result)
+    driver.get(url)
+    link_element = driver.find_element(By.CLASS_NAME, result)
+    link_element.click()
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    soup_A = soup.find(id='cardList')
+    cards_links = soup_A.find_all("div", {"class": "filterDiv"})
+    for cardlink in cards_links:
+        element = cardlink.find("a", class_="sh-active-client sh-quidget-rendered")
+        if element:
+            name = element.get("title")
+            if name:
+                name = name.replace("Apply Now for ", "")
+            link = element["href"]
+            creditNeededSpan = cardlink.find("span", class_="credit_needed font-weight-semibold")
+            creditNeeded = creditNeededSpan.text
+            img_element = cardlink.find("img")
+            imagesource = img_element["src"]
+            #image_data = download_webp_image_to_list(imagesource)
+            # description = "No description available"  # Default description
+            ul = cardlink.find("ul")
+            if not ul: 
+                pass
+            if ul:
+                description = ul.text.strip()  # Extract text and strip any excess whitespace
+            if name:  # Prevent duplicate card names
+                unique_card.add((name, link, description, creditNeeded, imagesource))  # Store as a tuple for better structure
+            #print(type(image_data))
+file_path = "output.txt"
+with open(file_path, "w", encoding="utf-8") as file:
+    # Iterate over each tuple in the list
+    for item in unique_card:
+        # Convert the tuple to a string and write it to the file
+        file.write(f"{item}\n")
 
-# Use WebDriverWait to ensure the page has loaded the necessary elements
-WebDriverWait(driver, 20).until(
-    #EC.visibility_of_element_located((By.ID, "div_D"))
-    EC.presence_of_element_located((By.ID, "onetrust-consent-sdk"))  # Adjust the ID based on actual content you need
-)
-
-html = driver.page_source
-soup = BeautifulSoup(html, 'html.parser')
-soup_A = soup.find(id='cardList')
-
-cards_links = soup_A.find_all("div", {"class": "filterDiv"})
-
-def download_webp_image_to_list(image_url):
-    # Send a GET request to the image URL
-    response = requests.get(image_url)
-    
-    # Check if the request was successful (HTTP status code 200)
-    if response.status_code == 200:
-        # Return the content of the response (the image data)
-        return response.content
-    else:
-        print("Failed to retrieve WebP image. Status code:", response.status_code)
-        return None
-
-unique_card = []
-
-for cardlink in cards_links:
-    element = cardlink.find("a", class_="sh-active-client sh-quidget-rendered")
-    if element:
-        name = element.get(0, 'data-rate-name')
-        link = element["href"]
-        creditNeededSpan = cardlink.find("span", class_="credit_needed font-weight-semibold")
-        creditNeeded = creditNeededSpan.text
-        img_element = cardlink.find("img")
-        imagesource = img_element["src"]
-        #image_data = download_webp_image_to_list(imagesource)
-
-    # description = "No description available"  # Default description
-    ul = cardlink.find("ul")
-
-    if not ul: 
-        pass
-
-    if ul:
-        description = ul.text.strip()  # Extract text and strip any excess whitespace
-    
-    if name not in unique_card and description not in unique_card:  # Prevent duplicate card names
-        unique_card.append((name, link, description, creditNeeded, imagesource))  # Store as a tuple for better structure
-        #print(type(image_data))
-# Output the results
-for card in unique_card:
-    print(card)
+# Inform the user that the operation is complete
+print(f"Data has been written to {file_path}")
