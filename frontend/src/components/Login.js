@@ -110,3 +110,27 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+
+/*
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAEWjrUWiKDY4RXy1WbB2waoh03wHz9OC4",
+  authDomain: "credrec-b6e05.firebaseapp.com",
+  projectId: "credrec-b6e05",
+  storageBucket: "credrec-b6e05.appspot.com",
+  messagingSenderId: "83988035294",
+  appId: "1:83988035294:web:9761c2b77518d45bca744f",
+  measurementId: "G-FVRVYD8M6K"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+*/
