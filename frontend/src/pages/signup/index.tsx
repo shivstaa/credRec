@@ -74,7 +74,7 @@ interface FirebaseError {
                       fullWidth
                       name="email"
                       required
-                      placeholder='john@gmail.com'
+                      placeholder='email'
                       />
               </Grid>
               <Grid item xs={12}>
@@ -98,7 +98,7 @@ interface FirebaseError {
                   name="email"
                   required
                   margin='none'
-                  placeholder='Confirm Password'
+                  placeholder='confirm password'
                 />
               </Grid>
               <Grid item xs={12}>

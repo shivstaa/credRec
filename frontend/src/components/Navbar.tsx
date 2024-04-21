@@ -6,6 +6,8 @@ import { auth } from '../../firebase'; // Ensure this path is correct!
 import { signOut } from "firebase/auth";
 import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
+import theme from '@/components/Theme';
 
 const Navbar: React.FC = () => {
   const { user, authenticated } = useAuth();
@@ -18,11 +20,12 @@ const Navbar: React.FC = () => {
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);  // Toggle function
 
   return (
-    <nav className="bg-white shadow-lg">
+    <ThemeProvider theme={theme}>
+          <nav className="bg-purple-800 shadow-lg">
       <div className="w-full px-4">
         <div className="flex justify-between">
           <Box className="flex items-center">
-            <Link href="/" className="flex items-center py-5 px-2 text-gray-700 hover:text-gray-900">
+            <Link href="/" className="flex items-center py-5 px-2 text-white hover:text-gray-900">
               <BsFillCreditCard2FrontFill className="icon"/>
               <h1 className="title" >CardRec</h1>
             </Link>
@@ -30,16 +33,16 @@ const Navbar: React.FC = () => {
           <div className="flex items-center"> {/* New flex container */}
     <Grid container>
       <Grid className="flex items-center justify-end">
-        <Link href="/" className="py-5 px-3 text-gray-700 hover:text-gray-900" style={{ color: '#2a0134' }}>Chat</Link>
+        <Link href="/" className="py-5 px-3 text-white hover:text-gray-900">Chat</Link>
       </Grid>
       <Grid item className="flex items-center justify-end">
-        <Link href="/history" className="py-5 px-3 text-gray-700 hover:text-gray-900" style={{ color: '#2a0134' }}>History</Link>
+        <Link href="/history" className="py-5 px-3 text-white hover:text-gray-900">History</Link>
       </Grid>
       <Grid item className="flex items-center justify-end">
         <Box display="flex" justifyContent="flex-end">
           {authenticated ? (
             <div className="relative">
-              <button onClick={toggleDropdown} className="py-5 px-3 text-gray-700 hover:text-gray-900">
+              <button onClick={toggleDropdown} className="py-5 px-3 text-white hover:text-gray-900">
                 {user?.email}
               </button>
               {dropdownOpen && (
@@ -60,6 +63,7 @@ const Navbar: React.FC = () => {
 </div>
 </div>
     </nav>
+    </ThemeProvider>
   );
 };
 
