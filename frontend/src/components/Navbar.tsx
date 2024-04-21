@@ -4,6 +4,8 @@ import { BsFillCreditCard2FrontFill } from "react-icons/bs";
 import { useAuth } from "./AuthContext";
 import { auth } from '../../firebase'; // Ensure this path is correct!
 import { signOut } from "firebase/auth";
+import Grid from '@mui/material/Grid';
+import { Box } from '@mui/material';
 
 const Navbar: React.FC = () => {
   const { user, authenticated } = useAuth();
@@ -17,36 +19,46 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-white shadow-lg">
-      <div className="max-w-6xl px-4">
+      <div className="w-full px-4">
         <div className="flex justify-between">
-          <div className="flex space-x-4">
+          <Box className="flex items-center">
             <Link href="/" className="flex items-center py-5 px-2 text-gray-700 hover:text-gray-900">
               <BsFillCreditCard2FrontFill className="icon"/>
-              <h1 className="title">CardRec</h1>
+              <h1 className="title" >CardRec</h1>
             </Link>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Link href="/" className="py-5 px-3 text-gray-700 hover:text-gray-900">Chat</Link>
-            <Link href="/history" className="py-5 px-3 text-gray-700 hover:text-gray-900">History</Link>
-            {authenticated ? (
-              <div className="relative">
-                <button onClick={toggleDropdown} className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                  {user?.email}
-                </button>
-                {dropdownOpen && (
-                  <div className="absolute right-0 bg-white shadow-md mt-2">
-                    <button className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link href="/login" className="py-5 px-3 text-gray-700 hover:text-gray-900">Login</Link>
-            )}
-          </div>
-        </div>
-      </div>
+          </Box>
+          <div className="flex items-center"> {/* New flex container */}
+    <Grid container>
+      <Grid className="flex items-center justify-end">
+        <Link href="/" className="py-5 px-3 text-gray-700 hover:text-gray-900" style={{ color: '#2a0134' }}>Chat</Link>
+      </Grid>
+      <Grid item className="flex items-center justify-end">
+        <Link href="/history" className="py-5 px-3 text-gray-700 hover:text-gray-900" style={{ color: '#2a0134' }}>History</Link>
+      </Grid>
+      <Grid item className="flex items-center justify-end">
+        <Box display="flex" justifyContent="flex-end">
+          {authenticated ? (
+            <div className="relative">
+              <button onClick={toggleDropdown} className="py-5 px-3 text-gray-700 hover:text-gray-900">
+                {user?.email}
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 bg-white shadow-md mt-2">
+                  <button className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/login" className="py-5 px-3 text-gray-700 hover:text-gray-900">Login</Link>
+          )}
+        </Box>
+      </Grid>
+    </Grid>
+  </div>
+</div>
+</div>
     </nav>
   );
 };
