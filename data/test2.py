@@ -42,7 +42,9 @@ for cardlink in cards_links:
     if not ul: 
         pass
 
-    description = ul.text.strip()  # Extract text and strip any excess whitespace
+    if ul:
+        description = ul.text.strip()  # Extract text and strip any excess whitespace
+    
 
     if name not in unique_card:  # Prevent duplicate card names
         unique_card.append((name, description))  # Store as a tuple for better structure
